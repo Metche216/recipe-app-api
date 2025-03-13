@@ -4,9 +4,15 @@ Serializers for recipe APIs.
 
 from rest_framework import serializers
 
-from core.models import Recipe, Tag
+from core.models import Recipe, Tag, Ingredient
 
+class IngredientSerializer(serializers.ModelSerializer):
+    """Serializer for ingredient"""
 
+    class Meta:
+        model =Ingredient
+        fields = ['id', 'name']
+        read_only_field = ['id']
 class TagSerializer(serializers.ModelSerializer):
     """Serializer for tags"""
 
@@ -35,7 +41,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             ) #get_or_create returns a tuple (obj, true/false)
             recipe.tags.add(tag_obj) #the object gets added always, but created only if not in Tag model.
 
-        
+
 
     def create(self, validated_data):
         """Create a recipe"""
@@ -50,10 +56,10 @@ class RecipeSerializer(serializers.ModelSerializer):
         if tags is not None:
             instance.tags.clear()
             self._get_or_create_tags(tags, instance)
-        
+
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-        
+
         instance.save()
         return instance
 
