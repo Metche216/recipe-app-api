@@ -5,15 +5,18 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import TestCase
 
+from decimal import Decimal
+
 from rest_framework import status
 from rest_framework.test import APIClient, force_authenticate
 
-from core.models import Ingredient
+from core.models import Ingredient, Recipe
 
 from recipe.serializers import IngredientSerializer
 
 
 INGREDIENTS_URL = reverse('recipe:ingredient-list')
+RECIPE_URL = reverse('recipe:recipe-list')
 
 def detail_url(ingredient_id):
     """Create and return an ingredient detail URL"""
@@ -95,6 +98,3 @@ class PrivateIngredientsAPITests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         ingredients = Ingredient.objects.filter(user=self.user)
         self.assertFalse(ingredients.exists())
-
-    def test_create_new_ingredient(self):
-        """Test creating a new ingredient"""
